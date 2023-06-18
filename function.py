@@ -2335,6 +2335,6 @@ def viz_radar_all(X_data, model, title, scaler=MinMaxScaler(), zoom=4):
     for row in range(0, len(data.index)):
         make_spider_all(data, row, 'clusters',
                         title=title,
-                        color=my_palette[row], ax=axes)  # mycolors[row]
+                        color=my_palette[row], ax=axes)
 
 
