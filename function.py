@@ -1,8 +1,6 @@
 #  --------------------------------------------------------------------------
 #     Librairies necessaires
 #  --------------------------------------------------------------------------
-from typing import List
-
 import seaborn as sns
 import missingno as msno
 # from IPython.core.display_functions import display
@@ -30,7 +28,6 @@ from sklearn.metrics import homogeneity_score, adjusted_rand_score, adjusted_mut
 from sklearn.metrics import silhouette_score, davies_bouldin_score, calinski_harabasz_score
 from sklearn.metrics import silhouette_samples
 
-
 # Clustering Librairies import
 from sklearn.cluster import KMeans
 from sklearn.cluster import MeanShift, estimate_bandwidth
@@ -52,6 +49,7 @@ sns.set_context('notebook')
 sns.color_palette("coolwarm", as_cmap=True)
 
 import warnings
+
 warnings.filterwarnings('ignore')
 
 # https://github.com/SkalskiP/courses/tree/master
@@ -67,9 +65,11 @@ warnings.filterwarnings('ignore')
 
 imgPath = 'D:/OpenClassrooms/Projet 5/Soutenance/'
 
-mycolors = ['#FFBB00', '#3C096C', '#9D4EDD', '#FFE270','#EAD39C', '#7D5E3C', '#A10115', "#4CAF50", '#D72C16', '#F0EFEA', '#C0B2B5', '#221f1f', "black",
-            "hotpink", "b", "#4CAF50",'#EAD39C', '#7D5E3C']
-AllColors = ['#99ff99', '#66b3ff', '#D72C16', '#4F6272', '#B7C3F3', '#ff9999', '#ffcc99', '#ff6666', '#DD7596', '#8EB897',
+mycolors = ['#FFBB00', '#3C096C', '#9D4EDD', '#FFE270', '#EAD39C', '#7D5E3C', '#A10115', "#4CAF50", '#D72C16',
+            '#F0EFEA', '#C0B2B5', '#221f1f', "black",
+            "hotpink", "b", "#4CAF50", '#EAD39C', '#7D5E3C']
+AllColors = ['#99ff99', '#66b3ff', '#D72C16', '#4F6272', '#B7C3F3', '#ff9999', '#ffcc99', '#ff6666', '#DD7596',
+             '#8EB897',
              '#c2c2f0', '#DDA0DD', '#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd', '#8c564b', '#e377c2',
              '#7f7f7f', '#bcbd22', '#17becf', '#e41a1c', '#377eb8', '#4daf4a', '#984ea3', '#ff7f00', '#ffff33',
              '#a65628', '#f781bf', "#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7",
@@ -127,9 +127,6 @@ def mostFreqValues(data, keylist: list, varlist: list = None):
     else:
         df = data.groupby(keylist)[varlist].agg(lambda x: stats.mode(x, keepdims=True)[0][0]).reset_index()
     return df
-
-
-
 
 
 def getKeyDict(d, val):
@@ -840,6 +837,7 @@ def apercu2(datasets, titles):
     data_summary['nb_colonnes'] = [data.shape[1] for data in datasets]
     data_summary['doublons'] = [data.duplicated().sum() for data in datasets]
     data_summary['nb_NaN'] = [data.isnull().sum().sum() for data in datasets]
+
     return data_summary.style.background_gradient(cmap='YlGnBu')
 
 
@@ -1018,7 +1016,8 @@ def matriceCorrelation(data, graphName='correlation.png', figsize=(15, 15)):
     plt.xticks(rotation=35, fontsize=6)
     plt.yticks(rotation=0, fontsize=6)
     plt.title("Coefficients de corrélation de Spearman", fontdict=font1)
-    plt.savefig(imgPath + graphName, bbox_inches='tight', dpi=400)
+    plt.savefig(imgPath + graphName, bbox_inches='tight', dpi=96)
+
     plt.show()
 
 
@@ -1038,7 +1037,7 @@ def boxplotgraph(data, x, y, rotation=90, figsize=(15, 8), graphName: str = None
     plt.xticks(rotation=rotation)
     plt.title("Boxplot " + x, fontdict=font1)
     if graphName:
-        fig.savefig(imgPath + graphName, bbox_inches='tight', dpi=400)
+        fig.savefig(imgPath + graphName, bbox_inches='tight', dpi=96)
     plt.show()
 
 
@@ -1071,7 +1070,7 @@ def grisearch_kmeans(X, kmax, figsize=(8, 3)):
     for i in range(2, kmax + 1):
         # On instancie un k-means pour k clusters
         model = Pipeline(steps=[("preprocessor", preprocessor),
-                          ("kmeans", KMeans(n_clusters=i, random_state=random_state))])
+                                ("kmeans", KMeans(n_clusters=i, random_state=random_state))])
         # On entraine
         model.fit(X)
 
@@ -1149,7 +1148,7 @@ def silhouettescore(X, k_list=(2, 11), gaphname='nbClusterElbow.png'):
                                               K=k_list, n_jobs=-1))])
     kmeans_visualizer.fit(X)
     kmeans_visualizer.named_steps['kelbowvisualizer'].show(outpath=imgPath + gaphname,
-                                                           bbox_inches='tight', dpi=400)
+                                                           bbox_inches='tight', dpi=96)
 
 
 metrics = ['distortion', 'silhouette', 'calinski_harabasz']
@@ -1185,10 +1184,10 @@ def elbowmetrics(X, preprocessor, metrics: list = None, k_list=(2, 11),
             ("silhouettevisualizer", SilhouetteVisualizer(KMeans(n_clusters=K, random_state=random_state),
                                                           ax=axs[2 * i + 1]))])
         silhouette_visualizer.fit(X)
-        silhouette_visualizer.named_steps['silhouettevisualizer'].show(bbox_inches='tight', dpi=400)
-    fig.text(0.198, .99, 'Clustering: Silhouette scores',
+        silhouette_visualizer.named_steps['silhouettevisualizer'].show(bbox_inches='tight', dpi=96)
+    fig.text(0.198, .99, m + 'score',
              fontsize=15, fontweight='bold', fontfamily='serif')
-    fig.savefig(imgPath + graphname, bbox_inches='tight', dpi=400)
+    fig.savefig(imgPath + graphname, bbox_inches='tight', dpi=96)
     plt.show()
     return K
 
@@ -1202,9 +1201,15 @@ def distanceInterCluster(X, preprocessor, K, graphname: str = None):
     distance_visualizer.fit(X)
     if graphname:
         distance_visualizer.named_steps['distancevisualizer'].show(outpath=imgPath + graphname,
-                                                                   bbox_inches='tight', dpi=400)
+                                                                   bbox_inches='tight', dpi=96)
     else:
-        distance_visualizer.named_steps['distancevisualizer'].show(bbox_inches='tight', dpi=400)
+        distance_visualizer.named_steps['distancevisualizer'].show(bbox_inches='tight', dpi=96)
+
+
+import plotly.offline as po
+import plotly.io as pio
+from plotly.subplots import make_subplots
+import plotly.graph_objects as go
 
 
 def rows_cols_update(rows, row, cols, col):
@@ -1215,33 +1220,39 @@ def rows_cols_update(rows, row, cols, col):
     return row, col
 
 
-def plot_radars(data, group, cols=2, figsize=(15, 8)):
-    nplot = len(data[group].drop_duplicates().values)
+def plot_radars(X_data, model, cols=2, scaler=MinMaxScaler(feature_range=(0.1, 1)),
+                width=1100, height=500, graphName=None):
+    model.fit(X_data)
+    labels = model.labels_
+    X_clusters = X_data.assign(clusters=labels)
+    X_clusters = X_clusters.groupby('clusters', as_index=False).mean()
+
+    unique, counts = np.unique(labels, return_counts=True)
+    nplot = len(set(unique))
     row, col = 1, 1
     rows = int(np.ceil(nplot / cols))  # .astype(int) # nplot // cols + 1
 
-    #     scaler = MinMaxScaler()
-    #     data = pd.DataFrame(scaler.fit_transform(data),
-    #                         index=data.index,
-    #                         columns=data.columns).reset_index()
+    data1 = X_clusters[['clusters']]
+    data2 = X_clusters.drop('clusters', axis=1)
 
+    group2 = list(data2.columns)
+    data2 = pd.DataFrame(scaler.fit_transform(data2),
+                         columns=data2.columns)
+    data = pd.concat([data1, data2], axis=1)
+    # data=data[[group]+group2]
     # fig = go.Figure()
     # Créer une instance de la classe make_subplots avec les dimensions souhaitées
     fig = make_subplots(rows=rows, cols=cols, specs=[[{'type': 'polar'}] * cols] * rows,
-                        subplot_titles=[f'Cluster {cat} \n' for cat in data[group]])
+                        subplot_titles=[f'Cluster {cat + 1} \n' for cat in data['clusters']])
     # Spécification des tailles des figures
-    # fig.update_layout(
-    #     width=1000,  # Largeur totale de la figure
-    #     height=900,  # Hauteur totale de la figure
-    #     # # Les valeurs ci-dessous spécifient les proportions de chaque sous-tracé par rapport à la taille
-    #     # # totale de la figure
-    #     # # Vous pouvez ajuster ces valeurs en fonction de vos besoins
-    #     # row_heights=[0.4, 0.6],  # Hauteurs des rangées (proportions)
-    #     # column_widths=[0.6, 0.4]  # Largeurs des colonnes (proportions)
-    # )
-    for k in data[group]:
+    fig.update_layout(
+        autosize=False,
+        width=width,  # Largeur totale de la figure
+        height=height * rows,  # Hauteur totale de la figure
+    )
+    for k in data['clusters']:
         fig.add_trace(go.Scatterpolar(
-            r=data[data[group] == k].iloc[:, 1:].values.reshape(-1),
+            r=data[data['clusters'] == k].iloc[:, 1:].values.reshape(-1),
             theta=data.columns[1:],
             fill='toself',
             name='Cluster ' + str(k)
@@ -1264,8 +1275,13 @@ def plot_radars(data, group, cols=2, figsize=(15, 8)):
             'x': 0.5,
             'xanchor': 'center',
             'yanchor': 'top'},
-        title_font_color="blue",
+        title_font_color='#114b98',
         title_font_size=20)
+    # Save the figure as a PNG file
+    if graphName:
+        # po.plot(fig, filename=imgPath + graphName) en html
+        # fig.write_image(imgPath + graphName)
+        pio.write_image(fig, imgPath + graphName)
 
     fig.show()
 
@@ -1367,18 +1383,17 @@ def correlation_graph(X, min_plans, preprocessor, x_y, figsize=(10, 4)):
     plt.show(block=False)
 
 
-
 # --- Define K-Means Functions ---
-def nbclusters(X, metrics:list, k_list:list=(2, 10), figsize=(14, 5)):
-    color_palette=['#FFCC00', '#54318C']
-    set_palette(color_palette)
-    title=dict(fontsize=12, fontweight='bold', style='italic', fontfamily='serif')
-    text_style=dict(fontweight='bold', fontfamily='serif')
-    layout=(1, len((metrics)))
+def nbclusters(X, metrics: list, k_list: list = (2, 10), figsize=(14, 5), graphName: str = None):
+    # color_palette=['#FFCC00', '#54318C']
+    # set_palette(color_palette)
+    title = dict(fontsize=12, fontweight='bold', style='italic', fontfamily='serif')
+    text_style = dict(fontweight='bold', fontfamily='serif')
+    layout = (1, len((metrics)))
 
     fig = plt.figure(figsize=figsize)
     for i, m in enumerate(metrics):
-        ax = fig.add_subplot(*layout,i+1)
+        ax = fig.add_subplot(*layout, i + 1)
         kmeans_visualizer = Pipeline([
             ("preprocessor", preprocessor),
             ("kelbowvisualizer", KElbowVisualizer(KMeans(random_state=random_state),
@@ -1387,39 +1402,43 @@ def nbclusters(X, metrics:list, k_list:list=(2, 10), figsize=(14, 5)):
         kmeans_visualizer.fit(X)
         kmeans_visualizer.named_steps['kelbowvisualizer'].finalize()
 
-        kmeans_visualizer.named_steps['kelbowvisualizer'].ax.set_title(m+' Score Elbow\n', **title)
+        kmeans_visualizer.named_steps['kelbowvisualizer'].ax.set_title(m + ' Score Elbow\n', **title)
         kmeans_visualizer.named_steps['kelbowvisualizer'].ax.tick_params(labelsize=7)
         # for text in kmeans_visualizer.named_steps['kelbowvisualizer'].ax.legend_.texts: text.set_fontsize(9)
         for spine in kmeans_visualizer.named_steps['kelbowvisualizer'].ax.spines.values():
             spine.set_color('None')
-        kmeans_visualizer.named_steps['kelbowvisualizer'].ax.legend(loc='upper center', bbox_to_anchor=(0.5, -0.15), borderpad=2, frameon=False, fontsize=8)
-        kmeans_visualizer.named_steps['kelbowvisualizer'].ax.grid(axis='y', alpha=0.5, color='#9B9A9C', linestyle='dotted')
+        kmeans_visualizer.named_steps['kelbowvisualizer'].ax.legend(loc='upper center', bbox_to_anchor=(0.5, -0.15),
+                                                                    borderpad=2, frameon=False, fontsize=8)
+        kmeans_visualizer.named_steps['kelbowvisualizer'].ax.grid(axis='y', alpha=0.5, color='#9B9A9C',
+                                                                  linestyle='dotted')
         kmeans_visualizer.named_steps['kelbowvisualizer'].ax.grid(axis='x', alpha=0)
         kmeans_visualizer.named_steps['kelbowvisualizer'].ax.set_xlabel('\nK Values', fontsize=9, **text_style)
-        kmeans_visualizer.named_steps['kelbowvisualizer'].ax.set_ylabel(m+' Scores\n', fontsize=9, **text_style)
+        kmeans_visualizer.named_steps['kelbowvisualizer'].ax.set_ylabel(m + ' Scores\n', fontsize=9, **text_style)
 
     plt.suptitle('Clustering: nombre optimal de clusters (K)', fontsize=14, **text_style)
     plt.gcf().text(0.9, 0.05, 'github.com/bouramayaya', style='italic', fontsize=7)
     plt.tight_layout()
+    if graphName:
+        fig.savefig(imgPath + graphName, bbox_inches='tight')
     plt.show()
 
 
-
-    def calculate_figsize(num_subplots, subplot_size):
-        rows = int(num_subplots ** 0.5)
+def calculate_figsize(num_subplots, subplot_size):
+    rows = int(num_subplots ** 0.5)
     cols = (num_subplots + rows - 1) // rows
     figsize = (cols * subplot_size[0], rows * subplot_size[1])
     return rows, cols, figsize
 
+
 def create_subplots(num_subplots, subplot_size, cols=None):
     if cols:
         rows = int(np.ceil(num_subplots / cols))
-        figsize=(cols * subplot_size[0], rows * subplot_size[1])
+        figsize = (cols * subplot_size[0], rows * subplot_size[1])
     else:
         rows = int(num_subplots ** 0.5)
         cols = (num_subplots + rows - 1) // rows
-        figsize=(cols * subplot_size[0], rows * subplot_size[1])
-    fig, axes = plt.subplots(nrows=rows+2, ncols=cols,
+        figsize = (cols * subplot_size[0], rows * subplot_size[1])
+    fig, axes = plt.subplots(nrows=rows + 2, ncols=cols,
                              constrained_layout=True, squeeze=False, figsize=figsize, dpi=96)
     # fig, axes = plt.subplots(nrows=rows, ncols=cols, figsize=figsize)
     fig.subplots_adjust(hspace=0.2)  # Ajustement de l'espacement vertical entre les sous-plots
@@ -1428,9 +1447,8 @@ def create_subplots(num_subplots, subplot_size, cols=None):
 
 
 def make_spider2(df, cols, rows, row, cluster_var, title, color):
-
     # number of variable
-    categories=list(df)[1:]
+    categories = list(df)[1:]
     N = len(categories)
 
     # What will be the angle of each axis in the plot? (we divide the plot / number of variable)
@@ -1438,49 +1456,49 @@ def make_spider2(df, cols, rows, row, cluster_var, title, color):
     angles += angles[:1]
 
     # Initialise the spider plot
-    ax = plt.subplot(cols, rows, row+1, polar=True)
+    ax = plt.subplot(cols, rows, row + 1, polar=True)
 
     # If you want the first axis to be on top:
     ax.set_theta_offset(pi / 2)
     ax.set_theta_direction(-1)
 
     # Draw one axe per variable + add labels labels yet
-    plt.xticks(angles[:-1], categories, color='black',fontfamily='serif',fontweight='light', size=8)
-    #ax.set_xticks([]) # turn labels off if you want - can look quite nice
+    plt.xticks(angles[:-1], categories, color='black', fontfamily='serif', fontweight='light', size=8)
+    # ax.set_xticks([]) # turn labels off if you want - can look quite nice
 
     # Draw ylabels
     ax.set_rlabel_position(0)
-    plt.yticks([0,0.2,0.30,0.40,0.50,0.75,0.100],
-               ["0","0.2","0.3","0.4","0.5","0.75","1"],
+    plt.yticks([0, 0.2, 0.30, 0.40, 0.50, 0.75, 0.100],
+               ["0", "0.2", "0.3", "0.4", "0.5", "0.75", "1"],
                color="grey", size=4)
-    plt.ylim(0,1)
-
+    plt.ylim(0, 1)
 
     # Ind1
-    values=df.loc[row].drop(cluster_var).values.flatten().tolist()
+    values = df.loc[row].drop(cluster_var).values.flatten().tolist()
     values += values[:1]
     ax.plot(angles, values, color=color, linewidth=2, linestyle='solid')
     ax.fill(angles, values, color=color, alpha=0.4)
 
     # Add a title
-    plt.title(title, size=10, fontfamily='serif',fontweight='bold', y=1.2)
+    plt.title(title, size=10, fontfamily='serif', fontweight='bold', y=1.2)
     plt.tight_layout()
 
-def viz_radar2(X_data, model,  subplot_size, scaler = MinMaxScaler(), cols=None):
-    my_dpi=96
+
+def viz_radar2(X_data, model, subplot_size, scaler=MinMaxScaler(), cols=None):
+    my_dpi = 96
 
     model.fit(X_data)
     labels = model.labels_
-    X_clusters=X_data.assign(clusters=labels)
+    X_clusters = X_data.assign(clusters=labels)
     X_clusters = X_clusters.groupby('clusters', as_index=False).mean()
     my_palette = plt.cm.get_cmap("crest", len(X_clusters.index))
 
     unique, counts = np.unique(labels, return_counts=True)
-    num_subplots=len(unique)
+    num_subplots = len(unique)
     if cols:
-        rows, cols, figsize, fig, axes=create_subplots(num_subplots, subplot_size, cols)
+        rows, cols, figsize, fig, axes = create_subplots(num_subplots, subplot_size, cols)
     else:
-        rows, cols, figsize, fig, axes=create_subplots(num_subplots, subplot_size)
+        rows, cols, figsize, fig, axes = create_subplots(num_subplots, subplot_size)
         # rows, cols, figsize=calculate_figsize(num_subplots, subplot_size)
     # fig, axes = plt.subplots(nrows=rows, ncols=cols, figsize=figsize, dpi=my_dpi)
     print('Nombre rows :', rows)
@@ -1488,35 +1506,37 @@ def viz_radar2(X_data, model,  subplot_size, scaler = MinMaxScaler(), cols=None)
     print('Nombre figsize :', figsize)
 
     axes = trim_axs(axes, num_subplots)
-    data1=X_clusters[['clusters']]
-    clusters_list=X_clusters['clusters'].tolist()
-    data2=X_clusters.drop('clusters', axis=1)
+    data1 = X_clusters[['clusters']]
+    clusters_list = X_clusters['clusters'].tolist()
+    data2 = X_clusters.drop('clusters', axis=1)
 
-    group2=list(data2.columns)
+    group2 = list(data2.columns)
     data2 = pd.DataFrame(scaler.fit_transform(data2),
                          columns=data2.columns)
-    data=pd.concat([data1, data2], axis=1)
+    data = pd.concat([data1, data2], axis=1)
     display(data)
     # Loop to plot
     for i, row in enumerate(clusters_list):
         make_spider2(data, rows, cols, row, 'clusters',
-                     title='Cluster: '+str(X_clusters['clusters'][row]),
-                     color=mycolors[row], ax=axes[i]) # '#244747'
+                     title='Cluster: ' + str(X_clusters['clusters'][row]),
+                     color=mycolors[row], ax=axes[i])  # '#244747'
     fig.show()
+
 
 # Libraries
 import matplotlib.pyplot as plt
 import pandas as pd
 from math import pi
-mycolors = ['#A10115',"#4CAF50", '#C0B2B5', '#221f1f',  "hotpink", "#4CAF50",
-            '#EAD39C', '#7D5E3C','#c2c2f0', '#DDA0DD', '#1f77b4', '#ff7f0e', '#2ca02c',
+
+mycolors = ['#A10115', "#4CAF50", '#C0B2B5', '#221f1f', "hotpink", "#4CAF50",
+            '#EAD39C', '#7D5E3C', '#c2c2f0', '#DDA0DD', '#1f77b4', '#ff7f0e', '#2ca02c',
             '#d62728', '#9467bd', '#8c564b', '#e377c2', '#7f7f7f', '#bcbd22', '#17becf',
             '#e41a1c', '#377eb8', '#4daf4a', '#984ea3', ]
 
-def make_spider(df, row, cluster_var, subtitle, color, layout):
 
+def make_spider(df, row, cluster_var, subtitle, color, layout):
     # number of variable
-    categories=list(df)[1:]
+    categories = list(df)[1:]
     N = len(categories)
 
     # What will be the angle of each axis in the plot? (we divide the plot / number of variable)
@@ -1524,61 +1544,61 @@ def make_spider(df, row, cluster_var, subtitle, color, layout):
     angles += angles[:1]
 
     # Initialise the spider plot
-    ax = plt.subplot(*layout,row+1, polar=True)
+    ax = plt.subplot(*layout, row + 1, polar=True)
 
     # If you want the first axis to be on top:
     ax.set_theta_offset(pi / 2)
     ax.set_theta_direction(-1)
 
     # Draw one axe per variable + add labels labels yet
-    plt.xticks(angles[:-1], categories, color='black',fontfamily='serif',fontweight='light', size=8)
-    #ax.set_xticks([]) # turn labels off if you want - can look quite nice
+    plt.xticks(angles[:-1], categories, color='black', fontfamily='serif', fontweight='light', size=8)
+    # ax.set_xticks([]) # turn labels off if you want - can look quite nice
 
     # Draw ylabels
     ax.set_rlabel_position(0)
-    plt.yticks([0,0.2,0.30,0.40,0.50,0.75,0.100],
-               ["0","0.2","0.3","0.4","0.5","0.75","1"],
+    plt.yticks([0, 0.2, 0.30, 0.40, 0.50, 0.75, 0.100],
+               ["0", "0.2", "0.3", "0.4", "0.5", "0.75", "1"],
                color="grey", size=4)
-    plt.ylim(0,1)
-
+    plt.ylim(0, 1)
 
     # Ind1
-    values=df.loc[row].drop(cluster_var).values.flatten().tolist()
+    values = df.loc[row].drop(cluster_var).values.flatten().tolist()
     values += values[:1]
     ax.plot(angles, values, color=color, linewidth=2, linestyle='solid')
     ax.fill(angles, values, color=color, alpha=0.4)
 
     # Add a subtitle
-    plt.title(subtitle, size=10, fontfamily='serif',fontweight='bold', y=1.2)
+    plt.title(subtitle, size=10, fontfamily='serif', fontweight='bold', y=1.2)
     plt.tight_layout()
 
-def viz_radar(X_data, model,  cols=4, scaler = MinMaxScaler(feature_range=(0.1,1)), dpi=96,
+
+def viz_radar(X_data, model, cols=4, scaler=MinMaxScaler(feature_range=(0.1, 1)), dpi=96,
               title=None, graphName=None):
-    my_dpi=96
+    my_dpi = 96
     model.fit(X_data)
     labels = model.labels_
-    X_clusters=X_data.assign(clusters=labels)
+    X_clusters = X_data.assign(clusters=labels)
     X_clusters = X_clusters.groupby('clusters', as_index=False).mean()
     my_palette = plt.cm.get_cmap("crest", len(X_clusters.index))
 
     unique, counts = np.unique(labels, return_counts=True)
-    num_subplots=len(unique)
+    num_subplots = len(unique)
     rows = int(np.ceil(num_subplots / cols))
-    fig=plt.figure(figsize=((1100/(4*my_dpi))*cols, (1000/(4*my_dpi))*rows), dpi=dpi)
-    layout=(rows, cols)
-    data1=X_clusters[['clusters']]
-    data2=X_clusters.drop('clusters', axis=1)
+    fig = plt.figure(figsize=((1100 / (4 * my_dpi)) * cols, (1000 / (4 * my_dpi)) * rows), dpi=dpi)
+    layout = (rows, cols)
+    data1 = X_clusters[['clusters']]
+    data2 = X_clusters.drop('clusters', axis=1)
 
-    group2=list(data2.columns)
+    group2 = list(data2.columns)
     data2 = pd.DataFrame(scaler.fit_transform(data2),
                          columns=data2.columns)
-    data=pd.concat([data1, data2], axis=1)
+    data = pd.concat([data1, data2], axis=1)
 
     # Loop to plot
     for row in range(0, len(data.index)):
         make_spider(data, row, 'clusters',
-                    subtitle='Cluster: '+str(X_clusters['clusters'][row]),
-                    color=mycolors[row], layout=layout) # '#244747'
+                    subtitle='Cluster: ' + str(X_clusters['clusters'][row]),
+                    color=mycolors[row], layout=layout)  # '#244747'
     if title:
         fig.text(0.5, 1.1, title, ha="center", fontdict=font_title2)
     if graphName:
@@ -1587,16 +1607,17 @@ def viz_radar(X_data, model,  cols=4, scaler = MinMaxScaler(feature_range=(0.1,1
     # fig.tight_layout()
     fig.show()
 
+
 # viz_radar(X_data=X_scaled.iloc[:,:-1],
-    # model=KMeans(4, random_state=random_state), dpi=96,
-    # title='Diagramme radar des clusters',
+# model=KMeans(4, random_state=random_state), dpi=96,
+# title='Diagramme radar des clusters',
 # graphName='RFM_radar_plot.png')
 
 
-def make_spider_all(df, row, cluster_var, title, color): # , ax=ax
+def make_spider_all(df, row, cluster_var, title, color):  # , ax=ax
 
     # number of variable
-    categories=list(df)[1:]
+    categories = list(df)[1:]
     N = len(categories)
 
     # What will be the angle of each axis in the plot? (we divide the plot / number of variable)
@@ -1611,64 +1632,62 @@ def make_spider_all(df, row, cluster_var, title, color): # , ax=ax
     ax.set_theta_direction(-1)
 
     # Draw one axe per variable + add labels labels yet
-    plt.xticks(angles[:-1], categories, color='black',fontfamily='serif',fontweight='light', size=8)
-    #ax.set_xticks([]) # turn labels off if you want - can look quite nice
+    plt.xticks(angles[:-1], categories, color='black', fontfamily='serif', fontweight='light', size=8)
+    # ax.set_xticks([]) # turn labels off if you want - can look quite nice
 
     # Draw ylabels
     ax.set_rlabel_position(0)
-    plt.yticks([0,0.2,0.30,0.40,0.50,0.75,0.100],
-               ["0","0.2","0.3","0.4","0.5","0.75","1"],
+    plt.yticks([0, 0.2, 0.30, 0.40, 0.50, 0.75, 0.100],
+               ["0", "0.2", "0.3", "0.4", "0.5", "0.75", "1"],
                color="grey", size=4)
-    plt.ylim(0,1)
-
+    plt.ylim(0, 1)
 
     # Ind1
-    values=df.loc[row].drop(cluster_var).values.flatten().tolist()
+    values = df.loc[row].drop(cluster_var).values.flatten().tolist()
     values += values[:1]
     ax.plot(angles, values, color=color, linewidth=2, linestyle='solid')
     ax.fill(angles, values, color=color, alpha=0.4)
 
     # Add a title
-    plt.title(title, size=10, fontfamily='serif',fontweight='bold', y=1.2)
+    plt.title(title, size=10, fontfamily='serif', fontweight='bold', y=1.2)
     plt.tight_layout()
 
 
-def viz_radar_all(X_data, model, title, scaler = MinMaxScaler(), zoom=4):
-    my_dpi=96
+def viz_radar_all(X_data, model, title, scaler=MinMaxScaler(), zoom=4):
+    my_dpi = 96
     model.fit(X_data)
     labels = model.labels_
-    X_clusters=X_data.assign(clusters=labels)
+    X_clusters = X_data.assign(clusters=labels)
     X_clusters = X_clusters.groupby('clusters', as_index=False).mean()
     my_palette = plt.cm.get_cmap("crest", len(X_clusters.index))
 
     unique, counts = np.unique(labels, return_counts=True)
-    num_subplots=len(unique)
+    num_subplots = len(unique)
     # rows = int(np.ceil(num_subplots / cols))
-    axes=plt.figure(figsize=((1000/(zoom*my_dpi)), (800/(zoom*my_dpi))), dpi=96)
-    layout=(1, 1)
-    data1=X_clusters[['clusters']]
-    data2=X_clusters.drop('clusters', axis=1)
+    axes = plt.figure(figsize=((1000 / (zoom * my_dpi)), (800 / (zoom * my_dpi))), dpi=96)
+    layout = (1, 1)
+    data1 = X_clusters[['clusters']]
+    data2 = X_clusters.drop('clusters', axis=1)
 
-    group2=list(data2.columns)
+    group2 = list(data2.columns)
     data2 = pd.DataFrame(scaler.fit_transform(data2),
                          columns=data2.columns)
-    data=pd.concat([data1, data2], axis=1)
+    data = pd.concat([data1, data2], axis=1)
     # Create a color palette:
     my_palette = plt.cm.get_cmap("crest", len(data.index))
     # Loop to plot
     for row in range(0, len(data.index)):
         make_spider_all(data, row, 'clusters',
                         title=title,
-                        color=mycolors[row]) # , ax=axes)mycolors[row]
-
-
-
+                        color=mycolors[row])  # , ax=axes)mycolors[row]
 
 
 #  --------------------------------------------------------------------------
 #     Plot histogramme
 #  --------------------------------------------------------------------------
 import scipy.stats as st
+
+
 def plot_histograms(df, features, bins=30, figsize=(12, 7), color='grey',
                     skip_outliers=False, thresh=3, layout=(3, 3), graphName=None):
     fig = plt.figure(figsize=figsize, dpi=96)
@@ -1692,7 +1711,7 @@ def plot_histograms(df, features, bins=30, figsize=(12, 7), color='grey',
     plt.tight_layout(w_pad=0.5, h_pad=0.65)
 
     if graphName:
-        plt.savefig(imgPath + graphName, bbox_inches='tight', dpi=400);
+        plt.savefig(imgPath + graphName, bbox_inches='tight', dpi=96);
     plt.show()
 
 
@@ -1726,7 +1745,7 @@ def elbowmetrics(X, preprocessor, metrics: list = None, k_list=(2, 11),
             ("silhouettevisualizer", SilhouetteVisualizer(KMeans(n_clusters=K, random_state=random_state),
                                                           ax=axs[2 * i + 1]))])
         silhouette_visualizer.fit(X)
-        silhouette_visualizer.named_steps['silhouettevisualizer'].show(bbox_inches='tight', dpi=400)
+        silhouette_visualizer.named_steps['silhouettevisualizer'].show(bbox_inches='tight', dpi=96)
     fig.text(0.198, .99, 'Clustering: Silhouette scores',
              fontsize=15, fontweight='bold', fontfamily='serif')
     fig.savefig(imgPath + graphname, bbox_inches='tight', dpi=96)
@@ -1771,8 +1790,8 @@ def distanceInterCluster(X, preprocessor, K, graphname: str = None):
         distance_visualizer.named_steps['distancevisualizer'].show(bbox_inches='tight', dpi=96)
 
 
-def visualizer(X, K, var1, var2, echelle=1000, figsize=(14, 8),
-               titre='Visualisation clustering'):
+def visualizer(X, preprocessor, K, var1, var2, echelle=1000, figsize=(14, 8),
+               titre='Visualisation clustering', graphname: str = None):
     kmeans = Pipeline(steps=[('preprocessor', preprocessor),
                              ('kmeans', KMeans(K, random_state=random_state))])
     kmeans.fit(X)
@@ -1830,7 +1849,7 @@ def visualizer(X, K, var1, var2, echelle=1000, figsize=(14, 8),
     df_waffle = dict(zip(unique, counts))
     total = sum(df_waffle.values())
     wfl_square = {key: value / echelle for key, value in df_waffle.items()}
-    wfl_label = {key: round(value / total * echelle, 2) for key, value in df_waffle.items()}
+    wfl_label = {key: round(value / total * 100, 2) for key, value in df_waffle.items()}
 
     ax3 = plt.subplot(2, 2, (3, 4))
     ax3.set_title('Pourcentage de chaque cluster\n', **title)
@@ -1845,6 +1864,8 @@ def visualizer(X, K, var1, var2, echelle=1000, figsize=(14, 8),
     plt.suptitle(titre, fontsize=14, **text_style)
     plt.gcf().text(0.9, 0.03, 'github.com/bouramayaya', style='italic', fontsize=8)
     plt.tight_layout()
+    if graphname:
+        fig.savefig(imgPath + graphname, bbox_inches='tight', dpi=96)
     plt.show();
 
 
@@ -1953,7 +1974,6 @@ def projection_cluster(X, layout=(1, 3), nb_clusters=None, graphname=None):
 
 
 from mpl_toolkits.mplot3d import Axes3D
-
 
 def projection_3D(X, K, n_components=3):
     model_pca = KMeans(n_clusters=K, random_state=random_state)
@@ -2090,11 +2110,10 @@ def desc_cluster_bar(df_cluster, varlist, cluster_var='clusters',
     plt.show()
 
 
-
 def desc_cluster_boxplot(df_cluster, varlist, cluster_var='clusters',
                          ncols=3, figsize=(14, 5), outliers=True, rotation=0):
     nplot = len(varlist)
-    nrows = int(np.ceil(nplot/ncols))
+    nrows = int(np.ceil(nplot / ncols))
     fig, axs = plt.subplots(nrows=1, ncols=3, figsize=figsize)
     axs = trim_axs(axs, nplot)
     for i, var in enumerate(varlist):
@@ -2105,10 +2124,8 @@ def desc_cluster_boxplot(df_cluster, varlist, cluster_var='clusters',
                              "#000000", "b", "#4CAF50"], boxprops=dict(alpha=.9))
         axs[i].set_title(var, fontweight="bold", fontfamily='serif', fontsize=13, color='#244247')
         axs[i].set_xlabel('')
-
         # sns.despine(right=True)
         # sns.despine(offset=10, trim=True)
-
         # axs[i].legend().set_visible(False)
         for tick in axs[i].get_xticklabels():
             tick.set_rotation(rotation)
@@ -2123,16 +2140,17 @@ def desc_cluster_boxplot(df_cluster, varlist, cluster_var='clusters',
     fig.tight_layout()
     plt.show()
 
-    def rows_cols_update(rows, row, cols, col):
-        if col + 1 > cols:
-            row, col = row + 1, 1
-        else:
-            row, col = row, col + 1
 
-    return row, col;
+def rows_cols_update(rows, row, cols, col):
+    if col + 1 > cols:
+        row, col = row + 1, 1
+    else:
+        row, col = row, col + 1
+    return row, col
 
 
-def plot_radars(X_data, model, cols=2, scaler=MinMaxScaler()):
+def plot_radars(X_data, model, cols=2, scaler=MinMaxScaler(feature_range=(0.1, 1)),
+                width=1100, height=500, graphName=None):
     model.fit(X_data)
     labels = model.labels_
     X_clusters = X_data.assign(clusters=labels)
@@ -2154,12 +2172,12 @@ def plot_radars(X_data, model, cols=2, scaler=MinMaxScaler()):
     # fig = go.Figure()
     # Créer une instance de la classe make_subplots avec les dimensions souhaitées
     fig = make_subplots(rows=rows, cols=cols, specs=[[{'type': 'polar'}] * cols] * rows,
-                        subplot_titles=[f'Cluster {cat} \n' for cat in data['clusters']])
+                        subplot_titles=[f'Cluster {cat + 1} \n' for cat in data['clusters']])
     # Spécification des tailles des figures
     fig.update_layout(
-        autosize=True,
-        width=1100,  # Largeur totale de la figure
-        height=500 * rows,  # Hauteur totale de la figure
+        autosize=False,
+        width=width,  # Largeur totale de la figure
+        height=height * rows,  # Hauteur totale de la figure
     )
     for k in data['clusters']:
         fig.add_trace(go.Scatterpolar(
@@ -2188,6 +2206,11 @@ def plot_radars(X_data, model, cols=2, scaler=MinMaxScaler()):
             'yanchor': 'top'},
         title_font_color='#114b98',
         title_font_size=20)
+    # Save the figure as a PNG file
+    if graphName:
+        # po.plot(fig, filename=imgPath + graphName) en html
+        # fig.write_image(imgPath + graphName)
+        pio.write_image(fig, imgPath + graphName)
 
     fig.show()
 
@@ -2234,7 +2257,7 @@ def make_spider(df, row, cluster_var, subtitle, color, layout):
 
 
 def viz_radar(X_data, model, cols=4, scaler=MinMaxScaler(feature_range=(0.1, 1)), dpi=96,
-              zoom=4, title=None, graphName=None):
+              zoom=4, title=None, graphName: str = None):
     my_dpi = 96
     model.fit(X_data)
     labels = model.labels_
@@ -2253,8 +2276,7 @@ def viz_radar(X_data, model, cols=4, scaler=MinMaxScaler(feature_range=(0.1, 1))
     data2 = X_clusters.drop('clusters', axis=1)
 
     group2 = list(data2.columns)
-    data2 = pd.DataFrame(scaler.fit_transform(data2),
-                         columns=data2.columns)
+    data2 = pd.DataFrame(scaler.fit_transform(data2), columns=data2.columns)
     data = pd.concat([data1, data2], axis=1)
 
     # Loop to plot
@@ -2338,3 +2360,622 @@ def viz_radar_all(X_data, model, title, scaler=MinMaxScaler(), zoom=4):
                         color=my_palette[row], ax=axes)
 
 
+def desc_cluster_bar(df_cluster, varlist, cluster_var='clusters',
+                     ncols=3, figsize=(14, 5), rotation=0):
+    nplot = len(varlist)
+    nrows = int(np.ceil(nplot / ncols))  # .astype(int) # nplot // cols + 1
+    nbclusters = df_cluster[cluster_var].nunique()
+    orders = df_cluster[cluster_var].unique().tolist()
+    orders.sort()
+    fig, axs = plt.subplots(nrows=nrows, ncols=ncols, figsize=figsize)
+    axs = trim_axs(axs, nplot)
+    for i, var in enumerate(varlist):
+        sns.barplot(x=cluster_var, y=var, data=df_cluster, order=orders, ax=axs[i])
+        axs[i].set_title(var, fontweight="bold", fontfamily='serif', fontsize=12, color='#244247')
+        for tick in axs[i].get_xticklabels():
+            tick.set_rotation(rotation)
+    plt.subplots_adjust(left=0.1,
+                        bottom=0.1,
+                        right=0.9,
+                        top=0.8,
+                        wspace=0.4,
+                        hspace=0.4)
+
+    fig.tight_layout()
+    plt.show()
+
+
+KBest = 4
+
+
+def description_cluster(X, KBest,
+                        model=KMeans(n_clusters=KBest, random_state=random_state),
+                        metric='mean',
+                        save=None):
+    # --- Add K-Means Prediction to Data Frame ----
+    model = Pipeline([("preprocessor", preprocessor),
+                      ("clusterer", model)])
+    model.fit(X)
+    labels = model.named_steps['clusterer'].labels_
+    df_cluster = X[X.columns]
+    df_cluster['clusters'] = labels + 1
+    df_cluster['clusters'] = 'Cluster ' + df_cluster['clusters'].astype(str)
+
+    # --- Calculationg Overall Mean from Current Data Frame ---
+    df_profile_overall = pd.DataFrame()
+    df_profile_overall['Overall'] = df_cluster.describe().loc[[metric]].T
+
+    # --- Summarize Mean of Each Clusters ---
+    df_cluster_summary = (df_cluster.groupby('clusters').describe().T.reset_index()
+                          .rename(columns={'level_0': 'Variables', 'level_1': 'Metrics'}))
+    df_cluster_summary = df_cluster_summary[df_cluster_summary['Metrics'] == metric].set_index('Variables')
+
+    # --- Combining Both Data Frame ---
+    print(clr.start + '.: Statistiques par cluster :.' + clr.end)
+    print(clr.color + '*' * 33)
+    # f = {'Cluster 1':'{:.2f}'} #column col Cluster 1 to 2 decimals
+    df_profile = np.round(df_cluster_summary.join(df_profile_overall).reset_index(), decimals=3)
+    df_styled = df_profile.style.format(precision=2).background_gradient(cmap='YlOrBr').hide_index()
+    display(df_styled)
+    if save:
+        dfi.export(df_styled, imgPath + save)
+
+    return df_profile
+
+
+def desc_cluster_boxplot(df_cluster, varlist, cluster_var='clusters',
+                         ncols=3, figsize=(14, 5), outliers=True, rotation=0, graphName: str = None):
+    nplot = len(varlist)
+    nrows = int(np.ceil(nplot / ncols))  # .astype(int) # nplot // cols + 1
+    nbclusters = df_cluster[cluster_var].nunique()
+    orders = df_cluster[cluster_var].unique().tolist()
+    orders.sort()
+    # my_palette = sns.color_palette("muted", len(unique))
+
+    fig, axs = plt.subplots(nrows=nrows, ncols=ncols, figsize=figsize)
+    axs = trim_axs(axs, nplot)
+    for i, var in enumerate(varlist):
+        sns.boxplot(x=cluster_var, y=var, data=df_cluster, ax=axs[i], showfliers=outliers,  # , fliersize=3
+                    palette=['#244247', '#91b8bd', '#4daf4a', '#984ea3', '#ff7f00', '#ffff33',
+                             '#a65628', '#f781bf', "#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00",
+                             "#CC79A7",
+                             "#000000", "b", "#4CAF50"], order=orders, boxprops=dict(alpha=.9))
+        axs[i].set_title(var, fontweight="bold", fontfamily='serif', fontsize=13, color='#244247')
+        axs[i].set_xlabel('')
+
+        # sns.despine(right=True)
+        # sns.despine(offset=10, trim=True)
+
+        # axs[i].legend().set_visible(False)
+        for tick in axs[i].get_xticklabels():
+            tick.set_rotation(rotation)
+
+    plt.subplots_adjust(left=0.1,
+                        bottom=0.1,
+                        right=0.9,
+                        top=0.8,
+                        wspace=0.4,
+                        hspace=0.4)
+
+    fig.tight_layout()
+    if graphName:
+        fig.savefig(imgPath + graphName, bbox_inches='tight')
+    plt.show()
+
+
+def features_importances_analysis(X, K):
+    data_dict = {}
+    data_dict['variables'] = X.columns.tolist()
+
+    # Perform K-means clustering
+    kmeans = KMeans(n_clusters=K, random_state=random_state)
+    kmeans.fit(X)  # X is your input data
+
+    # Get cluster labels for each data point
+    cluster_labels = kmeans.labels_
+
+    # Calculate cluster centroids
+    cluster_centers = kmeans.cluster_centers_
+
+    # Calculate feature importances for each cluster
+    feature_importances = np.zeros((kmeans.n_clusters, X.shape[1]))  # Initialize array for feature importances
+
+    for cluster_label in range(kmeans.n_clusters):
+        cluster_data = X[cluster_labels == cluster_label]  # Filter data points for current cluster
+        cluster_mean = np.mean(cluster_data, axis=0)  # Calculate mean feature values for current cluster
+        overall_mean = np.mean(X, axis=0)  # Calculate mean feature values for entire dataset
+        feature_importances[cluster_label] = np.abs(cluster_mean - overall_mean)  # Calculate feature importances
+
+    # Print feature importances for each cluster
+    for cluster_label, importances in enumerate(feature_importances):
+        listImpor = []
+        print(f"Cluster {cluster_label}:")
+        for feature_idx, importance in enumerate(importances):
+            print(X.columns.tolist()[feature_idx], f": {importance}")
+            listImpor.append(importance.round(3))
+        data_dict[f'Cluster ' + str(cluster_label)] = listImpor
+
+    dfeatures = pd.DataFrame(data_dict)
+    return dfeatures
+
+
+def graph_bar_plot(data, x, y, axis, title, labelsize, rotation,
+                   xlabsize, ylabsize, palette, saturation):
+    g = sns.barplot(x=x, y=y, data=data, saturation=saturation, ax=axis, palette=palette)
+    g.set(ylim=(data[y].min(), data[y].max() + 0.2 * data[y].max()))
+    for label1 in axis.containers:
+        axis.bar_label(label1, label_type='edge', fontsize=labelsize)  # color= AllColors[i],
+    for tick in axis.get_xticklabels():
+        tick.set_rotation(rotation)
+    #     axis.tick_params(axis='x')#, colors='black'
+    #     axis.tick_params(axis='y') # , colors='black'
+    for tick in axis.xaxis.get_major_ticks():
+        tick.label.set_fontsize(xlabsize)
+
+    for tick in axis.yaxis.get_major_ticks():
+        tick.label.set_fontsize(ylabsize)
+
+    # axes.legend(prop=dict(size=10))
+    #    axis.yaxis.set_tick_params(labelsize=ylabsize)
+    # g.set_xticks([])
+    #     g.set_yticks([])
+    g.set_xlabel('', size=xlabsize)
+    g.set_ylabel('', size=ylabsize)
+    # ax.title.set_text(title, fontdict = {'font.size':10})
+    g.set_title(title + "\n", fontdict=font_title3)
+    return g
+
+
+#  --------------------------------------------------------------------------
+# muted, pastel, coolwarm,'Accent', 'cubehelix',
+# 'gist_rainbow', 'terrain', 'viridis', vlag
+#  --------------------------------------------------------------------------
+
+
+def features_importances_graph(data, aggvar, listvar, title, ncols=2, figsize=(12, 5), labelsize=8,
+                               rotation=0, xlabsize=8, ylabsize=8, palette='coolwarm', saturation=0.85, graphName=None,
+                               shareyy: bool = True, sharexx: bool = False):
+    nplot = len(listvar)
+    nrows = nplot // ncols + 1
+    plt.figure(constrained_layout=True)
+    with plt.style.context('seaborn'):
+        with plt.rc_context(rc={'font.family': 'serif', 'font.size': 13}):
+            # ,'text.color':'#114b98', 'font.weight': 'bold', 'text.color':'#114b98',
+            fig, axs = plt.subplots(nrows=nrows, ncols=ncols, sharey=shareyy, sharex=sharexx,
+                                    constrained_layout=True, squeeze=False, figsize=figsize)
+            axs = trim_axs(axs, nplot)
+            for ax, var in zip(axs, listvar):
+                graph_bar_plot(data, aggvar, var, ax, var, labelsize, rotation,
+                               xlabsize, ylabsize, palette, saturation)
+            fig.text(0.5, 0.90, title, ha="center", fontdict=font_title2)
+            if graphName:
+                fig.savefig(imgPath + graphName, bbox_inches='tight')
+            # fig.subplots_adjust(top=0.88)
+            fig.tight_layout()
+            plt.show()
+
+
+def reduction(X, n_components):
+    # PCA
+    pipe1 = Pipeline([
+        ('preprocessor', preprocessor),
+        ('pca', PCA(n_components=n_components, random_state=random_state))
+    ])
+
+    X_pca = pd.DataFrame(pipe1.fit_transform(X))
+
+    # TSNE
+    pipe2 = Pipeline([
+        ('preprocessor', preprocessor),
+        ('tsne', TSNE(n_components=n_components, verbose=0, perplexity=45,
+                      random_state=random_state, n_jobs=-1)),
+    ])
+    X_tsne = pd.DataFrame(pipe2.fit_transform(X))
+
+    # UMAPgoo
+    pipe3 = Pipeline([
+        ('preprocessor', preprocessor),
+        ('umap', UMAP(n_components=n_components, random_state=random_state, n_jobs=-1)),
+    ])
+    X_umap = pd.DataFrame(pipe3.fit_transform(X))
+    return X_pca, X_tsne, X_umap, pipe1.named_steps['pca'].explained_variance_ratio_
+
+
+import matplotlib.cm as cm
+
+
+def projection_cluster(X, layout=(1, 3), nb_clusters=None, graphname=None):
+    text_style = dict(fontweight='bold', fontfamily='serif')
+    ann = dict(textcoords='offset points', va='center', ha='center', fontfamily='serif', style='italic')
+    title = dict(color='#114b98', fontsize=15, fontweight='bold', style='italic', fontfamily='serif')
+    bbox = dict(boxstyle='round', pad=0.3, color='#FFDA47', alpha=0.6)
+    ncols = layout[1]
+    nrows = layout[0]
+    fig, ax = plt.subplots(*layout, figsize=(5 * ncols, 4 * nrows))
+
+    if nb_clusters:
+        colors = AllColors[:nb_clusters]
+        color_palette = AllColors[:nb_clusters]  # ['#472165', '#FFBB00', '#3C096C', '#9D4EDD', '#FFE270']
+        set_palette(color_palette)
+
+        model_pca = KMeans(n_clusters=nb_clusters, random_state=random_state)
+        model_pca.fit(X_pca)
+
+        model_tsne = KMeans(n_clusters=nb_clusters, random_state=random_state)
+        model_tsne.fit(X_tsne)
+
+        model_umap = KMeans(n_clusters=nb_clusters, random_state=random_state)
+        model_umap.fit(X_umap)
+
+        # colors = cm.nipy_spectral(cluster_labels.astype(float) / n_clusters)
+        sns.scatterplot(x=X_pca.iloc[:, 0], y=X_pca.iloc[:, 1], data=X, legend="full",
+                        s=75, lw=0, alpha=1, c=model_pca.labels_, edgecolor='k', ax=ax[0])
+        ax[0].set_title(r"Projection des clusters-PCA",
+                        **title)
+
+        sns.scatterplot(x=X_tsne.iloc[:, 0], y=X_tsne.iloc[:, 1], data=X, legend="full",
+                        s=75, lw=0, alpha=1, c=model_tsne.labels_, edgecolor='k', ax=ax[1])
+        ax[1].set_title(r"Projection des clusters-TSNE", **title)
+
+        sns.scatterplot(x=X_umap.iloc[:, 0], y=X_umap.iloc[:, 1], data=X, legend="full",
+                        s=75, lw=0, alpha=1, c=model_umap.labels_, edgecolor='k', ax=ax[2])
+        ax[2].set_title(r"Projection des clusters-UMAP", **title)
+
+        # sns.scatterplot(x=X_isomap.iloc[:,0], y=X_isomap.iloc[:,1], data=X, legend="full",
+        #                 s=75, lw=0, alpha=1, c=colors, edgecolor='k', ax=ax[2])
+        # ax[2].set_title("Projection-ISOMAP", **title)
+
+    else:
+        colors = ['#D72C16']
+        sns.scatterplot(x=X_pca.iloc[:, 0], y=X_pca.iloc[:, 1], data=X, legend="full", c=colors, ax=ax[0])
+        ax[0].set_title("Projection-PCA", **title)
+
+        sns.scatterplot(x=X_tsne.iloc[:, 0], y=X_tsne.iloc[:, 1], data=X, legend="full", c=colors, ax=ax[1])
+        ax[1].set_title("Projection-TSNE", **title)
+
+        sns.scatterplot(x=X_umap.iloc[:, 0], y=X_umap.iloc[:, 1], data=X, legend="full", c=colors, ax=ax[2])
+        ax[2].set_title("Projection-UMAP", **title)
+
+        # sns.scatterplot(x=X_isomap.iloc[:,0], y=X_isomap.iloc[:,1], data=X, legend="full",  ax=ax[2])
+        # ax[2].set_title("Projection-ISOMAP", **title)
+    if graphname:
+        fig.savefig(imgPath + graphname, bbox_inches='tight')
+
+
+def prepro(X):
+    numeric_features = X.columns
+    numeric_transformer = Pipeline(steps=[('imputer', SimpleImputer(strategy='median')),
+                                          ('scaler', StandardScaler())])
+
+    preprocessor = ColumnTransformer(transformers=[('num', numeric_transformer, numeric_features)])
+
+    preprocessor = Pipeline(steps=[
+        ('preprocessor', preprocessor)
+    ])
+
+    X_scaled = pd.DataFrame(data=preprocessor.fit_transform(X),
+                            index=X.index, columns=X.columns)
+    return preprocessor, X_scaled
+
+
+def visualizer(X, preprocessor, K, var1, var2, echelle=1000, figsize=(14, 8),
+               titre='Visualisation clustering', graphname: str = None):
+    kmeans = Pipeline(steps=[('preprocessor', preprocessor),
+                             ('kmeans', KMeans(K, random_state=random_state))])
+    kmeans.fit(X)
+    y_kmeans = kmeans.fit_predict(X)
+    # --- Figures Settings ---
+    listecolors = ['#FFBB00', '#3C096C', '#A10115', '#C0B2B5', '#221f1f', "black",
+                   "hotpink", "b", "#4CAF50", '#EAD39C', '#7D5E3C', '#9D4EDD', '#FFE270']
+    cluster_colors = listecolors[:K]
+    labels = ['Cluster ' + (str(i + 1)) for i in range(K)] + ['Centroids']
+    title = dict(fontsize=15, fontweight='bold', style='italic', fontfamily='serif')
+    text_style = dict(fontweight='bold', fontfamily='serif')
+    scatter_style = dict(linewidth=0.65, edgecolor='#100C07', alpha=0.85)
+    legend_style = dict(borderpad=2, frameon=False, fontsize=8)
+    fig, ((ax1, ax2), (ax3, ax4)) = plt.subplots(2, 2, figsize=figsize, dpi=96)
+
+    # --- Silhouette Plots ---
+    # s_viz = SilhouetteVisualizer(kmeans, ax=ax1, colors=cluster_colors)
+    s_viz = Pipeline([
+        ("preprocessor", preprocessor),
+        ("silhouettevisualizer", SilhouetteVisualizer(KMeans(n_clusters=K, random_state=random_state),
+                                                      ax=ax1, colors=cluster_colors))])
+
+    s_viz.fit(X)
+    s_viz.named_steps['silhouettevisualizer'].finalize()
+    s_viz.named_steps['silhouettevisualizer'].ax.set_title('Graphique Silhouette des clusters\n', **title)
+    s_viz.named_steps['silhouettevisualizer'].ax.tick_params(labelsize=7)
+    for text in s_viz.named_steps['silhouettevisualizer'].ax.legend_.texts:
+        text.set_fontsize(9)
+    for spine in s_viz.named_steps['silhouettevisualizer'].ax.spines.values():
+        spine.set_color('None')
+    s_viz.named_steps['silhouettevisualizer'].ax.legend(loc='upper center', bbox_to_anchor=(0.5, -0.15), **legend_style)
+    s_viz.named_steps['silhouettevisualizer'].ax.grid(axis='x', alpha=0.5, color='#9B9A9C', linestyle='dotted')
+    s_viz.named_steps['silhouettevisualizer'].ax.grid(axis='y', alpha=0)
+    s_viz.named_steps['silhouettevisualizer'].ax.set_xlabel('\n Coefficient Values', fontsize=9, **text_style)
+    s_viz.named_steps['silhouettevisualizer'].ax.set_ylabel('Cluster Labels\n', fontsize=9, **text_style)
+
+    # --- Clusters Distribution ---
+    y_kmeans_labels = list(set(y_kmeans.tolist()))
+    for i in y_kmeans_labels:
+        ax2.scatter(X.loc[y_kmeans == i, var1], X.loc[y_kmeans == i, var2], s=50, c=cluster_colors[i], **scatter_style)
+    ax2.scatter(kmeans.named_steps['kmeans'].cluster_centers_[:, 0],
+                kmeans.named_steps['kmeans'].cluster_centers_[:, 1],
+                s=65, c='#0353A4', label='Centroids', **scatter_style)
+    for spine in ax2.spines.values():
+        spine.set_color('None')
+    ax2.set_title('Scatter Plot Clusters Distributions\n', **title)
+    ax2.legend(labels, bbox_to_anchor=(0.95, -0.05), ncol=5, **legend_style)
+    ax2.grid(axis='both', alpha=0.5, color='#9B9A9C', linestyle='dotted')
+    ax2.tick_params(left=False, right=False, labelleft=False, labelbottom=False, bottom=False)
+    ax2.spines['bottom'].set_visible(True)
+    ax2.spines['bottom'].set_color('#CAC9CD')
+
+    # --- Waffle Chart ---
+    unique, counts = np.unique(y_kmeans, return_counts=True)
+    df_waffle = dict(zip(unique, counts))
+    total = sum(df_waffle.values())
+    wfl_square = {key: value / echelle for key, value in df_waffle.items()}
+    wfl_label = {key: round(value / total * 100, 2) for key, value in df_waffle.items()}
+
+    ax3 = plt.subplot(2, 2, (3, 4))
+    ax3.set_title('Pourcentage de chaque cluster\n', **title)
+    ax3.set_aspect(aspect='auto')
+    Waffle.make_waffle(ax=ax3, rows=6, values=wfl_square, colors=cluster_colors,
+                       labels=[f"Cluster {i + 1} - ({k}%)" for i, k in wfl_label.items()], icons='child', icon_size=30,
+                       legend={'loc': 'upper center', 'bbox_to_anchor': (0.5, -0.05), 'ncol': 4, 'borderpad': 2,
+                               'frameon': False, 'fontsize': 10})
+    ax3.text(0.01, -0.09, f'** 1 square ≈ {echelle} Clients', weight='bold', style='italic', fontsize=8)
+
+    # --- Suptitle & WM ---
+    plt.suptitle(titre, fontsize=14, **text_style)
+    plt.gcf().text(0.9, 0.03, 'github.com/bouramayaya', style='italic', fontsize=8)
+    plt.tight_layout()
+    if graphname:
+        fig.savefig(imgPath + graphname, bbox_inches='tight', dpi=96)
+    plt.show();
+
+
+def reduction(X, n_components):
+    # PCA
+    pipe1 = Pipeline([
+        ('preprocessor', preprocessor),
+        ('pca', PCA(n_components=n_components, random_state=random_state))
+    ])
+
+    X_pca = pd.DataFrame(pipe1.fit_transform(X))
+
+    # TSNE
+    pipe2 = Pipeline([
+        ('preprocessor', preprocessor),
+        ('tsne', TSNE(n_components=n_components, verbose=0, perplexity=45,
+                      random_state=random_state, n_jobs=-1)),
+    ])
+    X_tsne = pd.DataFrame(pipe2.fit_transform(X))
+
+    # UMAPgoo
+    pipe3 = Pipeline([
+        ('preprocessor', preprocessor),
+        ('umap', UMAP(n_components=n_components, random_state=random_state, n_jobs=-1)),
+    ])
+    X_umap = pd.DataFrame(pipe3.fit_transform(X))
+    return X_pca, X_tsne, X_umap, pipe1.named_steps['pca'].explained_variance_ratio_
+
+
+from mpl_toolkits.mplot3d import Axes3D
+
+
+def projection_3D(X, K, n_components=3):
+    model_pca = KMeans(n_clusters=K, random_state=random_state)
+    model_pca.fit(X_pca3)
+    model_tsne = KMeans(n_clusters=K, random_state=random_state)
+    model_tsne.fit(X_tsne3)
+    model_umap = KMeans(n_clusters=K, random_state=random_state)
+    model_umap.fit(X_umap3)
+
+    fig = plt.figure(figsize=(15, 10))
+    ax = fig.add_subplot(1, 3, 1, projection='3d')
+    ax.scatter(X_pca3['PC1'], X_pca3['PC2'], X_pca3['PC3'], marker='o', s=30, edgecolor='k', c=model_pca.labels_)
+    ax.set_xlabel('PC1 - ' + '{:.1f}%'.format(variance_explique3[0] * 100))
+    ax.set_ylabel('PC2 - ' + '{:.1f}%'.format(variance_explique3[1] * 100))
+    ax.set_zlabel('PC3 - ' + '{:.1f}%'.format(variance_explique3[2] * 100))
+    # ax.view_init(elev=15, azim=45)
+
+    ax1 = fig.add_subplot(1, 3, 2, projection='3d')
+    ax1.scatter(X_tsne3['TSNE1'], X_tsne3['TSNE2'], X_tsne3['TSNE3'], marker='o',
+                s=30, edgecolor='k', c=model_tsne.labels_)
+    ax1.set_xlabel('TSNE1')
+    ax1.set_ylabel('TSNE2')
+    ax1.set_zlabel('TSNE3')
+    # ax1.view_init(elev=15, azim=45)
+
+    ax2 = fig.add_subplot(1, 3, 3, projection='3d')
+    ax2.scatter(X_umap3['UMAP1'], X_umap3['UMAP2'], X_umap3['UMAP3'], marker='o',
+                s=30, edgecolor='k', c=model_umap.labels_)
+    ax2.set_xlabel('UMAP1')
+    ax2.set_ylabel('UMAP2')
+    ax2.set_zlabel('UMAP3')
+    # ax2.view_init(elev=15, azim=45)
+    plt.show()
+
+
+import matplotlib.lines as lines
+
+
+def plot_centroid_3D(X, varlist, name="kmeans",
+                     n_clusters=2, graphname=None,
+                     model=KMeans(n_clusters=2, random_state=random_state),
+                     commentaires=None):
+    kmeans_model = Pipeline([("preprocessor", preprocessor),
+                             (name, model)])
+    kmeans_model.fit(X)
+    kmeans_labels = kmeans_model.named_steps[name].labels_
+    X_clusters = pd.DataFrame(data=preprocessor.fit_transform(X), index=X.index, columns=X.columns)
+    X_clusters["Cluster"] = kmeans_labels + 1
+    labels = pd.DataFrame(kmeans_labels)
+    # X_clusters_data = X_clusters.groupby("clusters", as_index=False).mean()
+    # X_clusters_data
+    # kmeans_sel = KMeans(n_clusters=2, random_state=random_state).fit(cluster_scaled)
+    # labels = pd.DataFrame(kmeans_sel.labels_)
+    # X_clusters = X_clusters.assign(Cluster=labels)
+    grouped_km = X_clusters.groupby(['Cluster']).mean().round(1)
+    grouped_km2 = X_clusters.groupby(['Cluster']).mean().round(1).reset_index()
+    grouped_km2['Cluster'] = grouped_km2['Cluster'].map(str)
+    grouped_km2
+    mycolors = ['#2a333f', '#7D5E3C', '#939da6', '#0f4c81', '#be3e35', '#70090a', '#244747', '#A10115', '#D72C16',
+                '#F0EFEA', '#C0B2B5', '#221f1f', "black", "hotpink", "b", "#4CAF50", '#EAD39C']
+    fig = plt.figure(figsize=(8, 7))
+    ax = fig.add_subplot(111, projection='3d')
+    ax.scatter(grouped_km2[varlist[0]], grouped_km2[varlist[1]], grouped_km2[varlist[2]],
+               color=mycolors[:n_clusters], alpha=0.5, s=500)
+
+    # add annotations one by one with a loop
+    for line in range(0, grouped_km.shape[0]):
+        ax.text(grouped_km2[varlist[0]][line],
+                grouped_km2[varlist[1]][line],
+                grouped_km2[varlist[2]][line], s=('Cluster \n' + grouped_km2['Cluster'][line]),
+                horizontalalignment='center', fontsize=12, fontweight='light', fontfamily='serif')
+
+    ax.set_xlabel(varlist[0])
+    ax.set_ylabel(varlist[1])
+    ax.set_zlabel(varlist[2])
+
+    fig.text(0.15, 1.0, 'Visualisation clusters en 3D', fontsize=15, fontweight='bold', fontfamily='serif')
+    fig.text(0.15, .95, 'Nous observons l\'espace occupé par chaque cluster (moyenne/cluster)',
+             fontsize=12, fontweight='light', fontfamily='serif')
+
+    fig.text(1.172, 1.0, 'Insight', fontsize=20, fontweight='bold', fontfamily='serif')
+    fig.text(1.172, 0.60, commentaires, fontsize=12, fontweight='light', fontfamily='serif')
+
+    l1 = lines.Line2D([1, 1], [0, 1], transform=fig.transFigure, figure=fig, color='black', lw=0.2)
+    fig.lines.extend([l1])
+    if graphname:
+        fig.savefig(imgPath + graphname, bbox_inches='tight')
+
+
+def features_importances_analysis(X, K):
+    data_dict = {}
+    data_dict['variables'] = X.columns.tolist()
+
+    # Perform K-means clustering
+    kmeans = KMeans(n_clusters=K, random_state=random_state)
+    kmeans.fit(X)  # X is your input data
+
+    # Get cluster labels for each data point
+    cluster_labels = kmeans.labels_
+
+    # Calculate cluster centroids
+    cluster_centers = kmeans.cluster_centers_
+
+    # Calculate feature importances for each cluster
+    feature_importances = np.zeros((kmeans.n_clusters, X.shape[1]))  # Initialize array for feature importances
+
+    for cluster_label in range(kmeans.n_clusters):
+        cluster_data = X[cluster_labels == cluster_label]  # Filter data points for current cluster
+        cluster_mean = np.mean(cluster_data, axis=0)  # Calculate mean feature values for current cluster
+        overall_mean = np.mean(X, axis=0)  # Calculate mean feature values for entire dataset
+        feature_importances[cluster_label] = np.abs(cluster_mean - overall_mean)  # Calculate feature importances
+
+    # Print feature importances for each cluster
+    for cluster_label, importances in enumerate(feature_importances):
+        listImpor = []
+        print(f"Cluster {cluster_label}:")
+        for feature_idx, importance in enumerate(importances):
+            print(X.columns.tolist()[feature_idx], f": {importance}")
+            listImpor.append(importance.round(3))
+        data_dict[f'Cluster ' + str(cluster_label)] = listImpor
+
+    dfeatures = pd.DataFrame(data_dict)
+    return dfeatures
+
+
+def graph_bar_plot(data, x, y, axis, title, labelsize, rotation,
+                   xlabsize, ylabsize, palette, saturation):
+    g = sns.barplot(x=x, y=y, data=data, saturation=saturation, ax=axis, palette=palette)
+    g.set(ylim=(data[y].min(), data[y].max() + 0.2 * data[y].max()))
+    for label1 in axis.containers:
+        axis.bar_label(label1, label_type='edge', fontsize=labelsize)  # color= AllColors[i],
+    for tick in axis.get_xticklabels():
+        tick.set_rotation(rotation)
+    #     axis.tick_params(axis='x')#, colors='black'
+    #     axis.tick_params(axis='y') # , colors='black'
+    for tick in axis.xaxis.get_major_ticks():
+        tick.label.set_fontsize(xlabsize)
+
+    for tick in axis.yaxis.get_major_ticks():
+        tick.label.set_fontsize(ylabsize)
+
+    # axes.legend(prop=dict(size=10))
+    #    axis.yaxis.set_tick_params(labelsize=ylabsize)
+    # g.set_xticks([])
+    #     g.set_yticks([])
+    g.set_xlabel('', size=xlabsize)
+    g.set_ylabel('', size=ylabsize)
+    # ax.title.set_text(title, fontdict = {'font.size':10})
+    g.set_title(title + "\n", fontdict=font_title3)
+    return g
+
+
+#  --------------------------------------------------------------------------
+# muted, pastel, coolwarm,'Accent', 'cubehelix',
+# 'gist_rainbow', 'terrain', 'viridis', vlag
+#  --------------------------------------------------------------------------
+
+
+def features_importances_graph(data, aggvar, listvar, title, ncols=2, figsize=(12, 5), labelsize=8,
+                               rotation=0, xlabsize=8, ylabsize=8, palette='coolwarm', saturation=0.85, graphName=None,
+                               shareyy: bool = True, sharexx: bool = False):
+    nplot = len(listvar)
+    nrows = nplot // ncols + 1
+    plt.figure(constrained_layout=True)
+    with plt.style.context('seaborn'):
+        with plt.rc_context(rc={'font.family': 'serif', 'font.size': 13}):
+            # ,'text.color':'#114b98', 'font.weight': 'bold', 'text.color':'#114b98',
+            fig, axs = plt.subplots(nrows=nrows, ncols=ncols, sharey=shareyy, sharex=sharexx,
+                                    constrained_layout=True, squeeze=False, figsize=figsize)
+            axs = trim_axs(axs, nplot)
+            for ax, var in zip(axs, listvar):
+                graph_bar_plot(data, aggvar, var, ax, var, labelsize, rotation,
+                               xlabsize, ylabsize, palette, saturation)
+            fig.text(0.5, 0.90, title, ha="center", fontdict=font_title2)
+            if graphName:
+                fig.savefig(imgPath + graphName, bbox_inches='tight')
+            # fig.subplots_adjust(top=0.88)
+            fig.tight_layout()
+            plt.show()
+
+
+def description_cluster(X, KBest,
+                        model=KMeans(n_clusters=KBest, random_state=random_state),
+                        metric='mean',
+                        save=None):
+    # --- Add K-Means Prediction to Data Frame ----
+    model = Pipeline([("preprocessor", preprocessor),
+                      ("clusterer", model)])
+    model.fit(X)
+    labels = model.named_steps['clusterer'].labels_
+    df_cluster = X[X.columns]
+    df_cluster['clusters'] = labels + 1
+    df_cluster['clusters'] = 'Cluster ' + df_cluster['clusters'].astype(str)
+
+    # --- Calculationg Overall Mean from Current Data Frame ---
+    df_profile_overall = pd.DataFrame()
+    df_profile_overall['Overall'] = df_cluster.describe().loc[[metric]].T
+
+    # --- Summarize Mean of Each Clusters ---
+    df_cluster_summary = (df_cluster.groupby('clusters').describe().T.reset_index()
+                          .rename(columns={'level_0': 'Variables', 'level_1': 'Metrics'}))
+    df_cluster_summary = df_cluster_summary[df_cluster_summary['Metrics'] == metric].set_index('Variables')
+
+    # --- Combining Both Data Frame ---
+    print(clr.start + '.: Statistiques par cluster :.' + clr.end)
+    print(clr.color + '*' * 33)
+    # f = {'Cluster 1':'{:.2f}'} #column col Cluster 1 to 2 decimals
+    df_profile = np.round(df_cluster_summary.join(df_profile_overall).reset_index(), decimals=3)
+    df_styled = df_profile.style.format(precision=2).background_gradient(cmap='YlOrBr').hide_index()
+    display(df_styled)
+    if save:
+        dfi.export(df_styled, imgPath + save)
+
+    return df_profile
