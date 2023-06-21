@@ -1966,7 +1966,12 @@ def projection_cluster(X, layout=(1, 3), nb_clusters=None, graphname=None):
 
         sns.scatterplot(x=X_umap.iloc[:, 0], y=X_umap.iloc[:, 1], data=X, legend="full", c=colors, ax=ax[2])
         ax[2].set_title("Projection-UMAP", **title)
+=++qqqqiiiiiiiq
 
+exicl
+
+
+QQQqqex
         # sns.scatterplot(x=X_isomap.iloc[:,0], y=X_isomap.iloc[:,1], data=X, legend="full",  ax=ax[2])
         # ax[2].set_title("Projection-ISOMAP", **title)
     if graphname:
